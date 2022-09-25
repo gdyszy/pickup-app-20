@@ -1,0 +1,13 @@
+{
+    "id": "yszyun-cloudPickup-app",
+    "name": "优礼品卡提货系统[前端]",
+    "version": "2.0.0",
+    "description": "基于 uniCloud 开发的礼品卡提货系统",
+    "keywords": [
+        "礼品卡",
+        "提货系统",
+        "公司节日福利",
+        "大闸蟹时凭卡",
+        "端午节礼品卡"
+    ]
+}

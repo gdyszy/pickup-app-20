@@ -1,0 +1,130 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "卡密验证",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "components/ValidCode/index",
+			"style": {}
+		}, {
+			"path": "pages/gift/gift",
+			"style": {
+				"navigationBarTitleText": "选择礼包",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/gift/order",
+			"style": {
+				"navigationBarTitleText": "收货信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/gift/success",
+			"style": {
+				"navigationBarTitleText": "兑换成功",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/logistics/logistics",
+			"style": {
+				"navigationBarTitleText": "订单查询",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},{
+			"path": "pages/logistics/logisticsDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/logistics/viewLogistic",
+			"style": {
+				"navigationBarTitleText": "物流查询",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/progress/index"
+			
+		},
+		{
+			"path": "pages/contact/index",
+			"style": {
+				"navigationBarTitleText": "联系我们",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/opendb-feedback/opendb-feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+		},
+		{
+			"path": "pages/webview/index"
+		},
+		{
+			"path": "pages/verification/index"
+		},
+		{
+			"path": "pages/verification/detail"
+		},
+		{
+			"path": "pages/verification/recovery"
+		},
+		{
+			"path": "pages/index/login"
+		},
+		{
+			"path": "pages/index/scanqrcode"
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "礼品提货卡",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"fontSize": "12px",
+		"color": "#a6a6a6",
+		"selectedColor": "#28b07c",
+		"borderStyle": "black",
+		"iconWidth": "24px",
+		"spacing": "2px",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/icon_home.png",
+				"text": "首页",
+				"selectedIconPath": "static/icon_home_sel.png"
+			},
+			{
+				"pagePath": "pages/contact/index",
+				"iconPath": "static/icon_msg.png",
+				"text": "联系我们",
+				"selectedIconPath": "static/icon_msg_sel.png"
+			}
+		]
+	}
+}
