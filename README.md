@@ -87,10 +87,8 @@
 
 ![](https://wiki.yszyun.com/uploads/pickup-app-20/images/m_ba80559982df742ec98d4024334c8ab6_r.png)
 
-# 此插件需关联管理后台才能使用
-管理后台购买，请联系技术人员
-
-![](https://wiki.yszyun.com/uploads/moa-admin/images/m_a3639d790e5a0b1f9d1a1dd5e695894c_r.png)
+# 管理后台演示，请联系客服
+wx:linjl2008
 
 
 # 目录结构
