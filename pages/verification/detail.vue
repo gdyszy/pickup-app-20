@@ -28,7 +28,7 @@
 					<view class="logistics-cont">{{item.recovery_price}}</view>
 				</view>
 				</view>
-			<button class="btn-Select-n" v-if="formData.state==2"  @click="goRecovery(formData.numb)">回收提货卡</button>
+			<button class="btn-Select-n" v-if="formData.state==2 && recoveryIs==1"  @click="goRecovery(formData.numb)">回收提货卡</button>
 			<button class="btn-Select" @click="returnIndex(formData.numb)">去兑换</button>
 			
 			<!-- #ifdef MP-WEIXIN -->
@@ -61,6 +61,7 @@
 				"emsCode":""
 			}
 			return {
+				recoveryIs:2,
 				gdsList: [],
 				setStorageData: {},
 			  formData,
@@ -74,6 +75,7 @@
 			if(option.cardNumb!=''){
 				this.getVerification(option.cardNumb)
 			}
+			this.recoveryIs = uni.getStorageSync('projectInfo')?uni.getStorageSync('projectInfo').recoveryIs:2
 		},
 		filters: {
 			filterTime(type) {

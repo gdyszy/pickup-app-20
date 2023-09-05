@@ -63,6 +63,7 @@
 		},
 		data() {
 			return {
+				c_mobile:true,
 				current: 0,
 				swiperDotIndex: 0,
 				swiperData: [{
@@ -132,11 +133,7 @@
 		methods: {
 			selectAddress(value) {
 				const [province, city, county] = value;
-				console.log('省份', province);
-				console.log('城市', city);
-				console.log('区域', county);
 				var place = province+city+county
-				console.log("place:"+place)
 				this.submitData.province = place
 			},
 			getList() {
@@ -181,7 +178,10 @@
 			const _this = this;
 			if (!c_mobile.test(_this.telephone)) {
 			this.show_nativeUI_toast("请输入正确手机号码", "error");
+			this.c_mobile=false
 			return false;
+			}else{
+				this.c_mobile=true
 			} 	
 			},
 
@@ -204,6 +204,22 @@
 				}
 			},
 			submitmp() { //提交数据
+			if(this.c_mobile==false){
+				this.show_nativeUI_toast("请输入正确手机号码", "error");
+				return false;
+			}
+			if(this.submitData.accept==""){
+				this.show_nativeUI_toast("请输入收货人姓名", "error");
+				return false;
+			}
+			if(this.submitData.province==""){
+				this.show_nativeUI_toast("请选择地区", "error");
+				return false;
+			}
+			if(this.submitData.address==""){
+				this.show_nativeUI_toast("请输入详细地址", "error");
+				return false;
+			}
 						let flag = true;
 						if (flag == true) {
 						// 检验是否存在卡密缓存

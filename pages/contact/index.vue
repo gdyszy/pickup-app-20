@@ -47,10 +47,18 @@
 				emp_code:emcode
 				}
 				this.commHttpRequest('query_user','getWebsite', params, false, (res) => {
-					if(res.result.data[0]){
+					if(res.result.affectedDocs==undefined){
+						uni.showToast({
+							title:'未配置客服信息',
+							icon:'none',
+							duration:2000
+						})
+					}else{
+					if(res.result.affectedDocs==1){
 						let projectInfo = res.result.data[0]
 						this.data.telMobile= projectInfo.telMobile
 					uni.setStorageSync('projectInfo', projectInfo)	
+					}	
 					}
 				})
 			},

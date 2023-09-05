@@ -15,6 +15,12 @@
 				</view>
 			</uni-forms>
 		</view>
+		<view class="contennt_title">
+			<view class="logistics-info" v-if="telMobile">
+				<view class="logistics-description">联系客服：</view>
+				<view class="logistics-cont" @click="onClickwx(telMobile)"> {{telMobile}}</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -26,6 +32,7 @@
 		},
 		data() {
 			return {
+				telMobile:'',
 				showBottom: true,
 				imgUrl: "",
 				submitData: {
@@ -42,6 +49,7 @@
 			uni.setNavigationBarTitle({
 				title: "提货券验证"
 			});
+			this.telMobile = uni.getStorageSync('projectInfo').telMobile
 		},
 		onReady() {
 			this.HMmessages.show('输入卡号密码可查询卡状态', {
@@ -50,6 +58,18 @@
 			})
 		},
 		methods: {
+			onClickwx(num) {
+				// #ifdef MP
+				wx.makePhoneCall({
+					phoneNumber: num,
+				})
+				// #endif
+				// #ifdef APP-PLUS||H5
+				uni.makePhoneCall({
+					phoneNumber:num
+				})
+				// #endif
+			},
 			clickMessage(e) {
 
 			},
@@ -164,5 +184,16 @@
 		margin-right: 10px;
 		background: #D9DDE5;
 	}
-
+	.contennt_title{
+	padding: 20px;
+	margin-top: 100rpx;
+	line-height: 50rpx;
+	border-top: 1px solid #afafaf;
+	font-size: 20px;
+	}
+	.logistics-info {
+		display: flex;
+		margin-top: 10px;
+		align-items: center;
+		}
 </style>
