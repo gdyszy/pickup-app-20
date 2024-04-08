@@ -231,7 +231,7 @@
 									_this.pwdActivityData.state = resData.state
 									uni.setStorageSync('pwdActivityData', _this.pwdActivityData)
 									uni.navigateTo({
-										url: '../gift/gift'
+										url: resData.activityData.activityType==2?'../gift/gift2':'../gift/gift'
 									});
 
 									break;

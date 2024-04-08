@@ -20,6 +20,14 @@
 				}
 			}
 		}, {
+			"path": "pages/gift/gift2",
+			"style": {
+				"navigationBarTitleText": "选择礼包",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},{
 			"path": "pages/gift/order",
 			"style": {
 				"navigationBarTitleText": "收货信息",
@@ -38,7 +46,7 @@
 		}, {
 			"path": "pages/logistics/logistics",
 			"style": {
-				"navigationBarTitleText": "订单查询",
+				"navigationBarTitleText": "领取信息",
 				"app-plus": {
 					"titleNView": false
 				}
@@ -98,6 +106,15 @@
 		},
 		{
 			"path": "pages/index/scanqrcode"
+		},
+		{
+			"path": "pages/logistics/logistics2",
+			"style": {
+				"navigationBarTitleText": "领取信息",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
 		}
 	],
 	"globalStyle": {

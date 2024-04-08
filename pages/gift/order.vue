@@ -140,8 +140,10 @@
 				let _this = this
 				const storageChooseData = uni.getStorageSync('storage_choose')
 				//已有订单信息，自动填写上一次提货的收货人信息
+				if(storageChooseData.receivingInfo){
 				this.submitData= storageChooseData.receivingInfo?storageChooseData.receivingInfo:this.submitData
 				this.telephone = storageChooseData.receivingInfo.acceptTel?storageChooseData.receivingInfo.acceptTel:''
+				}
 				this.getStorageData = storageChooseData
 				this.chooseGiftList = storageChooseData.selectIdList
 				var arr = Object.keys(storageChooseData)
@@ -182,7 +184,7 @@
 			return false;
 			}else{
 				this.c_mobile=true
-			} 	
+			}
 			},
 
 			changeSwiper(e) {
@@ -247,12 +249,13 @@
 				//查询绑定在活动内的商品列表，获取绑定商品的库存
 				this.commHttpRequest('query_user','gdsQueryUser', params, false, (res) => {
 					this.getGoods = res.result.data
+					var activityType = this.getStorageData.activityType
 					this.stockObjSubmit.goods=[]
 					for (let i in this.getGoods) {
 						let obj = {}
 						if(this.getGoods[i]._id==this.getStorageData.selectIdList[i]._id){
 						obj._id = this.getGoods[i]._id
-						obj.stock = this.getGoods[i].stock - this.getStorageData.selectIdList[i].chooseNumb
+						obj.stock = activityType==2?(this.getGoods[i].stock- this.getStorageData.selectIdList[i].chooseNumb):(this.getGoods[i].stock - this.getStorageData.selectIdList[i].exchangeLimit)
 						this.stockObjSubmit.goods.push(obj)	
 						}
 						
@@ -269,13 +272,14 @@
 				this.commHttpRequest('query_user','activityQueryUser', params, false, (res) => {
 					this.getActivityGds = res.result.data[0].activityGds
 					this.stockObjSubmit.activityGds = this.getActivityGds
+					var activityType = this.getStorageData.activityType
 					// 判断库存是否充足，充足则判断卡密并修改库存量，不足则停止运行并弹出提示
 					let arr = []
 					let stockFlag = true
 					for (let i in this.getActivityGds) {
 						arr.push(this.getActivityGds[i]._id)
 					}
-					for (let i = 0; i < this.stockObjSubmit.activityGds.length; i++) {
+				/* 	for (let i = 0; i < this.stockObjSubmit.activityGds.length; i++) {
 					  for (let j = 0; j < this.getStorageData.selectIdList.length; j++) {
 					   if (this.stockObjSubmit.activityGds[i]._id == this.getStorageData.selectIdList[j]._id) {
 						   if(this.stockObjSubmit.activityGds[i].exchangeStock-this.getStorageData.selectIdList[j].chooseNumb<0||this.stockObjSubmit.activityGds[i].stock-this.getStorageData.selectIdList[j].chooseNumb<0){
@@ -300,6 +304,50 @@
 						this.stockObjSubmit.activityGds[i].haveChooseNumb = 0	
 						}
 					  }
+					} */
+					for (let i in this.getStorageData.selectIdList) {
+						if (arr.indexOf(this.getStorageData.selectIdList[i]._id) != -1) {
+							let index = arr.indexOf(this.getStorageData.selectIdList[i]._id)
+							// 库存不足。返回提示
+							if(activityType==2){
+							if (this.getActivityGds[index].exchangeStock - this.getStorageData.selectIdList[i].chooseNumb < 0 ) {
+								var title = this.getGoods[i].title + '库存不足，请返回重新选择！'
+								uni.showToast({
+									title: title,
+									duration: 2500,
+									image: "/static/false.png"
+								});
+								uni.hideLoading()
+								stockFlag = false
+								this.isDisabled = false
+								break;
+							}
+							// 库存充足，修改兑换后，活动库存的数据
+							else {
+								this.stockObjSubmit.activityGds[i].exchangeStock = this.getActivityGds[index].exchangeStock - this.getStorageData.selectIdList[i].chooseNumb;
+							}		
+							}else{
+							if (this.getActivityGds[index].exchangeStock - this.getActivityGds[index]
+								.exchangeLimit < 0 || this.getGoods[i].stock - this.getActivityGds[index]
+								.exchangeLimit < 0) {
+								var title = this.getGoods[i].title + '库存不足，请返回重新选择！'
+								uni.showToast({
+									title: title,
+									duration: 2500,
+									image: "/static/false.png"
+								});
+								uni.hideLoading()
+								stockFlag = false
+								this.isDisabled = false
+								break;
+							}
+							// 库存充足，修改兑换后，活动库存的数据
+							else {
+								this.stockObjSubmit.activityGds[i].exchangeStock = this.getActivityGds[index].exchangeStock - this.getActivityGds[index].exchangeLimit;
+							}	
+							}
+							
+						}
 					}
 					if (stockFlag == true) {
 						this.checkCardPwd()
@@ -312,6 +360,7 @@
 				let  params = {
 					numbValue:this.getStorageData.numb
 				}
+				var activityType = this.getStorageData.activityType
 				//查询绑定在活动内的商品列表，获取绑定商品的库存
 				this.commHttpRequest('query_user','pwdCardQueryUser', params, false, (res) => {
 					if (res.result.affectedDocs == 0) {
@@ -324,13 +373,13 @@
 						}, 3000)
 					} else if (res.result.data[0].state == "2"||res.result.data[0].state == "8") {
 						// 更改卡密状态&库存数据
-						this.modifyCardStatus()
 						// 组合需要提交的数据
 						this.createdOrderID()
 						this.submitData.activityID = this.getStorageData.activityID
 						this.submitData.activityImg = this.getStorageData.activityImg
 						this.submitData.activityTitle = this.getStorageData.activityTitle
 						this.submitData.cardNumb = this.getStorageData.numb
+						this.submitData.activityType = activityType
 					
 						let gdsTitle = ""
 						for (var i = 0; i < this.chooseGiftList.length; i++) {
@@ -347,16 +396,34 @@
 								gdsImg: this.chooseGiftList[j].image,
 								exchangeLimit: this.chooseGiftList[j].exchangeLimit,
 								chooseNumb:this.chooseGiftList[j].chooseNumb,
-								haveChooseNumb:this.chooseGiftList[j].haveChooseNumb
+								chooseNumb: activityType==2?this.chooseGiftList[j].chooseNumb:this.chooseGiftList[j].exchangeLimit
 							}
 							arr.push(obj)
 						}
 						this.submitData.selectGdsIdList = arr
 						this.submitData.emp_code = uni.getStorageSync('emp_code')?uni.getStorageSync('emp_code'):this.$emp_code
 						this.submitData.acceptTel = this.telephone
-					
+						//更新库存的参数
+						var  stockUpdateParams = {
+							numbValue:this.getStorageData.numb,
+							stockObjSubmitValue:this.stockObjSubmit
+						}
+						this.submitData.stockUpdate = stockUpdateParams						
 						// 提交订单
 						this.commHttpRequest('add_user','orderAddUser', this.submitData, true, (res) => {
+							if(res.result.code==10002){
+								uni.showToast({
+								    title: '已超过可兑换总金额,请重新选择商品',
+									icon:'none',
+									duration:2500
+								})
+								setTimeout(function() {
+									uni.reLaunch({
+										url: './gift2'
+									})
+								}, 3000)
+								return false
+							}else if(res.result.id){
 							_this.show_nativeUI_toast("订单提交成功", "success");
 							uni.setStorage({
 								key: 'storage_activityID',
@@ -364,9 +431,13 @@
 							});
 							setTimeout(function() {
 								uni.reLaunch({
-									url: '../gift/success?cardNumb='+_this.submitData.cardNumb
+									url: '../gift/success'
 								});
-							}, 3000)
+							}, 3000)	
+							}else{
+								_this.show_nativeUI_toast("提交异常，请重新提交", "error");
+							}
+							
 						})
 						
 					} else {
@@ -376,25 +447,6 @@
 				})
 				
 			},
-
-			modifyCardStatus() {
-				let _this = this
-				let  params = {
-					numbValue:this.getStorageData.numb
-				}
-				let  param = {
-					stockObjSubmitValue:this.stockObjSubmit
-				}
-				_this.commHttpRequest('update_user','stockUpdate', param, false, (res) => {
-					
-				})
-			/* 	this.commHttpRequest('update_user','pwdCardUpdateUser', params, false, (res) => {
-					_this.commHttpRequest('update_user','stockUpdate', param, false, (res) => {
-						
-					})
-				}) */
-			},
-
 			createdOrderID() {
 				let date = new Date().Format('yyyyMMddhhmmss')
 				let times = Math.pow(10, 10)
